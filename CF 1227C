@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+const int N = 1e5 + 9;
+
+vector < int > g[N];
+bool vis[N]; int f = 0;
+map < pair < int, int > , int > p;
+map < int , int > q;
+
+void dfs(int u) {
+	for(auto v : g[u]) {
+		if(g[u].size() > 2) {
+			f = 1;
+			return;
+		}
+		else if(!vis[v]) {
+			vis[v] = true;
+			p[{u, v}] = q[u] ^ 1;
+			q[v] = p[{u, v}];
+			dfs(v);
+		}
+	}
+}
+void clr() {
+	memset(vis, false, sizeof(vis));
+		p.clear(); q.clear();
+		for(int i = 0; i <= N; i++) g[i].clear();
+		f = 0;
+}
+int main() {
+	ios_base:: sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int t; cin >> t;
+	while(t--) {
+		int n; cin >> n;
+		vector < pair < int, int > > x;
+		map < int, int > y;
+		for(int i = 1; i < n ; i++) {
+			int u, v;
+			cin >> u >> v;
+			x.push_back({u, v});
+			g[u].push_back(v);
+			g[v].push_back(u);
+			y[u]++, y[v]++;
+		}
+		for(int i = 1; i <= n; i++) {
+			if(y[i] == 1) {
+				vis[i] = true;
+		        dfs(i);
+		        break;
+			}
+		}
+		if(f == 1) {
+			clr();
+			cout << "-1" << endl;
+			continue;
+		}
+		for(int i = 1; i < n; i++) {
+			if(p[{x[i - 1].first,x[i - 1].second}] == 1 || p[{x[i - 1].second,x[i - 1].first}] == 1)
+			{
+				cout << "2 ";
+			}
+			else cout << "3 ";
+		}
+		cout << endl;
+		clr();
+	}
+	return 0;
+}
