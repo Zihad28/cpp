@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+#define ll long long
+const int N = 1e5 + 9;
+using namespace std;
+vector < int > g[N];
+double dfs(int u, int prev) {
+    int cnt = 0;
+    double sum = 0;
+    for(auto v : g[u]) {
+        if(v != prev) {
+        cnt++;
+        sum += 1 + dfs(v, u);
+        }
+    }
+    return cnt? (double) (sum / cnt) : 0;
+}
+int main() {
+    ios_base :: sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    int n; cin >> n;
+    for(int i = 0;i < n - 1; i++) {
+        int u, v;
+        cin >> u >> v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    cout << fixed << setprecision(15) << dfs(1, 0) << endl;
+    return 0;
+}
